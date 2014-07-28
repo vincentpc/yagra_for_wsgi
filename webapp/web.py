@@ -251,9 +251,24 @@ class Application(object):
 
         return request
 
-    def delegate(self):
-        path = self._request.path
-        method = self._request.meth
+    def __call__(self, environ, start_response):
+        self._status = '200 OK'
+        del self.headers[:]
+
+        result = self.delegate(environ)
+        start_response(self._status, self.headers)
+
+        if isinstance(result, basestring):
+            return iter([result])
+        else:
+            return iter(result)
+
+    def delegate(self, environ):
+        #path = self._request.path
+        #method = self._request.meth
+
+        path = environ['PATH_INFO']
+        method = environ['REQUEST_METHOD']
 
         for pattern, name in self._urls:
             m = re.match('^' + pattern + '$', path)

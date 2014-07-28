@@ -6,7 +6,7 @@ What
 ===============
 
 
-訪問網址:  http://vincentpc.servehttp.com:8080
+访问网址:  http://vincentpc.servehttp.com:8080
 
 一个提供avatar hosting服务的站点
 

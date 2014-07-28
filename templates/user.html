@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>Yagra User Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/navbar.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <!-- Static navbar -->
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Yagra</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="/signout">Sign Out</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </div>
+
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="page-header">
+          <h1>Welcome %(name)s</h1>
+
+        <p>Account: %(name)s</p>
+        <p>Register Time: %(time)s</p>
+      <form class="form-signin" role="form" action="/pwdchange" method="GET">
+        <button class="btn btn-primary" type="submit">Change Password</button>
+    </form>
+     </div>
+     <div class ="page-header">
+         <h3> Your Avatar: </h3>
+          %(image)s
+      </div>
+      <div class="page-header">
+          <h3>Upload New Avatar: </h3>
+          <p>
+        <form role="form" enctype="multipart/form-data" action="/upload" method="POST">
+            <div class="form-group">
+                <input type="file" name="filename">
+                %(xsrf_token)s
+        </div>
+        <button type="submit" class="btn btn-lg btn-primary">Submit</button>
+        <h5 class="form-signin-heading">Only JPEG/PNG/GIF(less than 5MB) Supported</h5>
+      </form>
+      </p>
+      </div>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  </body>
+</html>

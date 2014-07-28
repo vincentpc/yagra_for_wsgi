@@ -1,40 +1,16 @@
-Y@gra
-===================
+.. _installation-and-configuaration:
 
 
-What
-===============
+**************************************
+Installation and Configuration 系统安装及运行
+**************************************
 
-
-訪問網址:  http://vincentpc.servehttp.com:8080
-
-一个提供avatar hosting服务的站点
-
-你可以在yagar上管理你的头像
-
-功能:
-
-* 注册（用户名，密码）
-
-* 登录/登出
-
-* 密码修改
-
-* 上传/更换 头像
-
-* 提供头像访问API
-
-
-
-Status
-----------
-Version: 1.1
-
-版本号:1.1
-
+.. _installation
 
 Installation 
 ===============
+
+.. _dependency
 
 Dependency
 ----------
@@ -64,17 +40,19 @@ Dependency
  	参考网址 [MySQL for Python](http://sourceforge.net/projects/mysql-python/)
 
 
-note:
+.. note:
 
    	make init 自动安装依赖软件(mysql-python)
    	
    	make doc  自动生成使用文档,文档目录在doc/_build下
 
        
+.. _install
 
 Install
 -------
 
+.. _making-a-list:
    		
 * 初次运行设置apache(请根据系统apache安装目录调正路径)::
 
@@ -100,6 +78,7 @@ Install
 
    		python main.py
 
+.. _configuration
 
 Configuration 
 ================
@@ -153,10 +132,12 @@ Apache2服务器设置
         # Possible values include: debug, info, notice, warn, error, crit,
         # alert, emerg.
         LogLevel warn
+
         CustomLog ${APACHE_LOG_DIR}/access.log combined
-      </VirtualHost>
+</VirtualHost>
 
 
+.. _database-config:
 
 Database Configuration
 ----------------------
@@ -166,6 +147,7 @@ Database Configuration
 默认创建名字为yagra的数据库,如果存在则会删除后创建
 
 默认创建一个yagra账户(`密码为abcd!1234,与config对应`)并用此用户访问该数据库::
+
 
 
 
@@ -199,13 +181,3 @@ Documentation
 
 存储在 /docs/_build/html(首页为index.html)
     
-
-
-CHANGELOG
-===============   
-
-2014.3.5   1.1 beta release
-
-2014.2.27  beta release
-
-

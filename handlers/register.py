@@ -16,7 +16,7 @@ class RegisterHandler(BaseHandler):
         xsrf_token = self.xsrf_from_html()
         params = {'error_info': error, 'xsrf_token': xsrf_token}
         body = self.wrap_html('templates/register.html', params)
-        self.write(body)
+        return self.write(body)
 
     def post(self):
         self.check_xsrf()
@@ -34,7 +34,7 @@ class RegisterHandler(BaseHandler):
                 result = user.insert_user(email, password)
                 if result != -1:
                     self.set_secure_cookie('email', str(email))
-                    self.redirect("/user")
+                    return self.redirect("/user")
                 else:
                     error = "insert falure, try again later"
         else:

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import sys
 import os
 import cgi
 import Cookie
 import re
-import sys
 import httplib
 import datetime
 import calendar
@@ -18,7 +18,7 @@ import webapp.utils as tool
 import config
 
 
-class Httprequest(object):
+class HttpRequest(object):
 
     def __init__(self, meth, uri, query_str, host, headers, cookies=""):
         self.meth = meth
@@ -49,6 +49,14 @@ class Httprequest(object):
                 self._cookies.load(self.cookies_str)
         return self._cookies
 
+class HttpResponse(object):
+
+    def __init__(self, status, header, body):
+        self.status = status
+        self.header = header
+        self.body = body
+        
+
 
 class TemplateWrapper(object):
 
@@ -57,6 +65,8 @@ class TemplateWrapper(object):
 
     @staticmethod
     def wrap_html(path, params):
+        print os.path.dirname(__file__)
+        path = os.path.join(os.path.dirname(__file__), "..", path)
         body = open(path, 'r').read()
         if params:
             body = body % params
@@ -170,15 +180,15 @@ class BaseHandler(object):
 
     def gen_headers(self):
         status_expr = httplib.responses[self._status_code]
-        header_line = ["Status: %d %s" % (self._status_code, status_expr)]
+        header_line = [("Status","".join(str(self._status_code)+ " " +status_expr))]
         for name, value in self._headers.iteritems():
-            header_line.append("%s: %s" % (name, value))
+            header_line.append((name, value))
 
         if hasattr(self, "_new_cookie"):
             for cookie in self._new_cookie.values():
-                header_line.append("Set-Cookie: " + cookie.OutputString(None))
+                header_line.append(("Set-Cookie",cookie.OutputString(None)))
 
-        return "\r\n".join(header_line) + "\r\n\r\n"
+        return header_line
 
     def get_args(self, name, default=[]):
         args = []
@@ -199,18 +209,18 @@ class BaseHandler(object):
         self.set_status(301)
         self.set_header("Location", urlparse.urljoin(self.request.uri, url))
         self.set_header("Cache-Control", "no-cache")
-        self.write()
+        return self.write()
 
     def write(self, text=""):
         if isinstance(text, dict):
-            #text = json_encode(text)
-
             self.set_header("Content-Type", "application/json; charset=UTF-8")
-
+        
+        status_expr = httplib.responses[self._status_code]
+        resp_status = "".join(str(self._status_code)) + " " + status_expr     
         resp_body = text
         resp_header = self.gen_headers()
-        self.request.write(resp_header)
-        self.request.write(resp_body)
+        resp = HttpResponse(resp_status, resp_header, resp_body)
+        return resp
 
     def wrap_html(self, path, params=None):
         return TemplateWrapper.wrap_html(path, params)
@@ -234,41 +244,36 @@ class Application(object):
         self._config = config
         self._vars = vars
 
-    def get_request(self):
-        env = os.environ
+    def get_request(self, environ):
 
         headers = []
 
-        request = Httprequest(
-            unicode(env["REQUEST_METHOD"], encoding="utf-8"),
-            unicode(env["REQUEST_URI"], encoding="utf-8"),
-            unicode(env.get("QUERY_STRING"), encoding="utf-8"),
-            unicode(env.get("HTTP_HOST"), encoding="utf-8"),
+        request = HttpRequest(
+            unicode(environ["REQUEST_METHOD"], encoding="utf-8"),
+            unicode(environ["REQUEST_URI"], encoding="utf-8"),
+            unicode(environ.get("QUERY_STRING"), encoding="utf-8"),
+            unicode(environ.get("HTTP_HOST"), encoding="utf-8"),
             headers,
-            env.get("HTTP_COOKIE")
+            environ.get("HTTP_COOKIE")
 
         )
 
         return request
 
     def __call__(self, environ, start_response):
-        self._status = '200 OK'
-        del self.headers[:]
 
-        result = self.delegate(environ)
-        start_response(self._status, self.headers)
+        self._request = self.get_request(environ)
+        resp = self.delegate(environ)
+        start_response(resp.status, resp.header)
 
-        if isinstance(result, basestring):
-            return iter([result])
+        if isinstance(resp.body, basestring):
+            return iter([resp.body])
         else:
-            return iter(result)
+            return iter(resp.body)
 
     def delegate(self, environ):
-        #path = self._request.path
-        #method = self._request.meth
-
-        path = environ['PATH_INFO']
-        method = environ['REQUEST_METHOD']
+        path = self._request.path
+        method = self._request.meth
 
         for pattern, name in self._urls:
             m = re.match('^' + pattern + '$', path)
@@ -284,9 +289,3 @@ class Application(object):
         handler = ErrorHandler(self, self._request)
         return handler.get()
 
-    def handle(self):
-        self._request = self.get_request()
-        self.delegate()
-
-    def run(self):
-        self.handle()

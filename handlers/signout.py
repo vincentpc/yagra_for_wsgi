@@ -8,7 +8,7 @@ class SignoutHandler(BaseHandler):
 
     def get(self):
         self.clear_cookies()
-        self.redirect("/")
+        return self.redirect("/")
 
     def post(self):
         self.get()

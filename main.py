@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import sys
+sys.path.append('/home/vagrant/mini')
+
 from webapp.web import Application
 from handlers.index import IndexHandler
 from handlers.register import RegisterHandler
@@ -27,6 +30,5 @@ URLS = (
     ("/ftypeerror", "FiletypeErrorHandler")
 )
 
-if __name__ == '__main__':
-    app = Application(globals(), URLS)
-    app.__call__
+#if __name__ == '__main__':
+application = Application(globals(), URLS)

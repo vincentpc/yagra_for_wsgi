@@ -17,11 +17,11 @@ class SigninHandler(BaseHandler):
             user = dbapi.User()
             if user.check_user(email, password) == 0:
                 self.set_secure_cookie('email', str(email))
-                self.redirect("/user")
+                return self.redirect("/user")
 
             error = "Password Invalid"
         xsrf_token = self.xsrf_from_html()
         param = {"error_info": error, "xsrf_token": xsrf_token}
         body = self.wrap_html('templates/index.html', param)
-        self.write(body)
+        return self.write(body)
         # self.redirect("/")

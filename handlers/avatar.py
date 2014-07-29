@@ -21,9 +21,9 @@ class AvatarHandler(BaseHandler):
                 filetype = imghdr.what(fullpath)
             mtype = mimetypes.types_map.get("." + filetype, "image/jpeg")
             self.set_header("Content-Type", mtype)
-            self.write(image)
+            return self.write(image)
         else:
-            self.redirect("/error")
+            return self.redirect("/error")
 
     def post(self, name):
         self.get(name)

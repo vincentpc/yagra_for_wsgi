@@ -12,9 +12,9 @@ class IndexHandler(BaseHandler):
         email = self.get_secure_cookie("email")
         user = dbapi.User()
         if email and user.get_user(email) == 0:
-            self.redirect("/user")
+            return self.redirect("/user")
         else:
             self.clear_cookies()
             param = {"error_info": error, "xsrf_token": self.xsrf_from_html()}
             body = self.wrap_html('templates/index.html', param)
-            self.write(body)
+            return self.write(body)

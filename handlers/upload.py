@@ -14,7 +14,7 @@ class UploadHandler(BaseHandler):
 
     def check_xsrf(self):
         if self.check_xsrf_cookie() == False:
-            self.redirect("ftypeerror")
+            return self.redirect("ftypeerror")
 
     def check(self):
         email = self.get_secure_cookie("email")
@@ -27,7 +27,7 @@ class UploadHandler(BaseHandler):
                 self.email = email
         else:
             self.clear_cookies()
-            self.redirect("/")
+            return self.redirect("/")
 
     def get_filesize(self, file):
         file.seek(0, 2)
@@ -44,14 +44,14 @@ class UploadHandler(BaseHandler):
             filetype = imghdr.what(fileitem.file)
             filesize = self.get_filesize(fileitem.file)
             if filesize > MAX_FILE_SIZE:
-                self.redirect("/ftypeerror")
+                return self.redirect("/ftypeerror")
             if filetype is "jpeg" or filetype is "png" or filetype is "gif":
                 m = hashlib.md5()
                 m.update(self.email)
                 email_md5 = m.hexdigest()
                 open("images/" + email_md5, "wb").write(fileitem.file.read())
-                self.redirect("/user")
+                return self.redirect("/user")
             else:
-                self.redirect("/ftypeerror")
+                return self.redirect("/ftypeerror")
         else:
-            self.redirect("/user")
+            return self.redirect("/user")

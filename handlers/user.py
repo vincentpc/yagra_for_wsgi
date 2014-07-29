@@ -20,7 +20,7 @@ class UserHandler(BaseHandler):
                 self.email = email
         else:
             self.clear_cookies()
-            self.redirect("/")
+            return self.redirect("/")
 
     def get(self):
         self.check()
@@ -37,4 +37,4 @@ class UserHandler(BaseHandler):
         xsrf_token = self.xsrf_from_html()
         params = {'name': self.email, 'time': self.time, 'image': imagetag, 'xsrf_token': xsrf_token}
         body = self.wrap_html('templates/user.html', params)
-        self.write(body)
+        return self.write(body)

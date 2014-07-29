@@ -7,4 +7,5 @@ from webapp.web import BaseHandler
 class ErrorHandler(BaseHandler):
 
     def get(self):
-        self.write("Page Not Exist")
+        error = "Page Not Found "
+        return self.write(error)

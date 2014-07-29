@@ -234,9 +234,8 @@ class ErrorHandler(BaseHandler):
 
     def get(self):
         self.set_status(404)
-
         body = "Page Not Found"
-        self.write(body)
+        return self.write(body)
 
 
 class Application(object):

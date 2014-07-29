@@ -47,7 +47,7 @@ class User(object):
     def get_user(self, name):
         sqlstr = "SELECT * FROM yagra_user WHERE user_email = %s"
         c = self.db.cursor()
-        c.execute(sqlstr, (name))
+        c.execute(sqlstr, (name,))
         result = c.fetchall()
 
         if len(result) is not 0:
@@ -58,7 +58,7 @@ class User(object):
     def get_user_all(self, name):
         sqlstr = "SELECT * FROM yagra_user WHERE user_email = %s"
         c = self.db.cursor()
-        c.execute(sqlstr, (name))
+        c.execute(sqlstr, (name,))
         result = c.fetchall()
 
         if len(result) is not 0:

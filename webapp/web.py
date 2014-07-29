@@ -20,7 +20,8 @@ import config
 
 class HttpRequest(object):
 
-    def __init__(self, meth, uri, query_str, host, headers, cookies=""):
+    def __init__(self, environ, wsgiinput, meth, uri,
+                 query_str, host, headers, cookies=""):
         self.meth = meth
         self.uri = uri
         self.cookies_str = cookies
@@ -31,7 +32,10 @@ class HttpRequest(object):
         self.args = {}
         self.files = {}
 
-        form = cgi.FieldStorage()
+        form = cgi.FieldStorage(
+            fp=wsgiinput,
+            environ=environ,
+            keep_blank_values=True)
         for key in form.keys():
             item = form[key]
             if item.file:
@@ -49,13 +53,13 @@ class HttpRequest(object):
                 self._cookies.load(self.cookies_str)
         return self._cookies
 
+
 class HttpResponse(object):
 
     def __init__(self, status, header, body):
         self.status = status
         self.header = header
         self.body = body
-        
 
 
 class TemplateWrapper(object):
@@ -180,13 +184,14 @@ class BaseHandler(object):
 
     def gen_headers(self):
         status_expr = httplib.responses[self._status_code]
-        header_line = [("Status","".join(str(self._status_code)+ " " +status_expr))]
+        header_line = [
+            ("Status", "".join(str(self._status_code) + " " + status_expr))]
         for name, value in self._headers.iteritems():
             header_line.append((name, value))
 
         if hasattr(self, "_new_cookie"):
             for cookie in self._new_cookie.values():
-                header_line.append(("Set-Cookie",cookie.OutputString(None)))
+                header_line.append(("Set-Cookie", cookie.OutputString(None)))
 
         return header_line
 
@@ -214,9 +219,8 @@ class BaseHandler(object):
     def write(self, text=""):
         if isinstance(text, dict):
             self.set_header("Content-Type", "application/json; charset=UTF-8")
-        
         status_expr = httplib.responses[self._status_code]
-        resp_status = "".join(str(self._status_code)) + " " + status_expr     
+        resp_status = "".join(str(self._status_code)) + " " + status_expr
         resp_body = text
         resp_header = self.gen_headers()
         resp = HttpResponse(resp_status, resp_header, resp_body)
@@ -249,6 +253,8 @@ class Application(object):
         headers = []
 
         request = HttpRequest(
+            environ,
+            environ["wsgi.input"],
             unicode(environ["REQUEST_METHOD"], encoding="utf-8"),
             unicode(environ["REQUEST_URI"], encoding="utf-8"),
             unicode(environ.get("QUERY_STRING"), encoding="utf-8"),
@@ -264,6 +270,7 @@ class Application(object):
 
         self._request = self.get_request(environ)
         resp = self.delegate(environ)
+        print resp
         start_response(resp.status, resp.header)
 
         if isinstance(resp.body, basestring):
@@ -288,4 +295,3 @@ class Application(object):
 
         handler = ErrorHandler(self, self._request)
         return handler.get()
-

@@ -27,6 +27,7 @@ class RegisterHandler(BaseHandler):
 
         user = dbapi.User()
         error = ""
+        print email,password,password2
         if email and password == password2:
             if user.get_user(email) == 0:
                 error = "user already exist"
@@ -34,6 +35,7 @@ class RegisterHandler(BaseHandler):
                 result = user.insert_user(email, password)
                 if result != -1:
                     self.set_secure_cookie('email', str(email))
+                    print "hello set cookie"
                     return self.redirect("/user")
                 else:
                     error = "insert falure, try again later"
@@ -43,4 +45,4 @@ class RegisterHandler(BaseHandler):
             else:
                 error = "missing argument"
 
-        self.get(error)
+        return self.get(error)

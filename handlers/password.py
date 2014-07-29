@@ -10,7 +10,7 @@ class PasswordHandler(BaseHandler):
     def check_xsrf(self):
         if self.check_xsrf_cookie() == False:
             self.clear_cookies()
-            self.redirect("/")
+            return self.redirect("/")
 
     def check(self):
         email = self.get_secure_cookie("email")
@@ -22,7 +22,7 @@ class PasswordHandler(BaseHandler):
                 self.email = email
         else:
             self.clear_cookies()
-            self.redirect("/")
+            return self.redirect("/")
 
     def get(self, error=""):
         self.check()
@@ -31,7 +31,7 @@ class PasswordHandler(BaseHandler):
             "name": self.email,
             "xsrf_token": self.xsrf_from_html()}
         body = self.wrap_html('templates/pwdchange.html', params)
-        self.write(body)
+        return self.write(body)
 
     def post(self):
         self.check()
@@ -56,4 +56,4 @@ class PasswordHandler(BaseHandler):
             else:
                 error = "old password incorrect"
 
-        self.get(error)
+        return self.get(error)

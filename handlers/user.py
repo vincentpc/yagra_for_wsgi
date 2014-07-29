@@ -29,8 +29,9 @@ class UserHandler(BaseHandler):
         m.update(self.email)
         email_md5 = m.hexdigest()
         fn = "images/" + email_md5
-        if os.path.isfile(fn):
-            imagetag =  """<img src="%s" height="400"  class="rounded" alt="Upload Image Below">""" % fn
+        path = os.path.join(os.path.dirname(__file__), "..", fn)
+        if os.path.isfile(path):
+            imagetag =  """<img src="%s" height="400"  class="rounded" alt="Upload Image Below">""" % fn 
         else:
             imagetag = """<p class="text-warning">Avatar Not Available. Upload One!</p>""" + \
                 """<img src="static/default.jpg" height="400"  class="rounded" alt="Upload Image Below">"""

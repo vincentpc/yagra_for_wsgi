@@ -22,6 +22,7 @@ class HttpRequest(object):
 
     def __init__(self, environ, wsgiinput, meth, uri,
                  query_str, host, headers, cookies=""):
+        print uri
         self.meth = meth
         self.uri = uri
         self.cookies_str = cookies
@@ -69,7 +70,6 @@ class TemplateWrapper(object):
 
     @staticmethod
     def wrap_html(path, params):
-        print os.path.dirname(__file__)
         path = os.path.join(os.path.dirname(__file__), "..", path)
         body = open(path, 'r').read()
         if params:
@@ -270,7 +270,6 @@ class Application(object):
 
         self._request = self.get_request(environ)
         resp = self.delegate(environ)
-        print resp
         start_response(resp.status, resp.header)
 
         if isinstance(resp.body, basestring):

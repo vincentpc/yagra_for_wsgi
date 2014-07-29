@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import os
 import hashlib
 import imghdr
 
 from webapp.web import BaseHandler
 from model import dbapi
 
-MAX_FILE_SIZE = 5000000 #upload file size setting < 5MB
+MAX_FILE_SIZE = 5000000  # upload file size setting < 5MB
 
 
 class UploadHandler(BaseHandler):
@@ -49,7 +50,9 @@ class UploadHandler(BaseHandler):
                 m = hashlib.md5()
                 m.update(self.email)
                 email_md5 = m.hexdigest()
-                open("images/" + email_md5, "wb").write(fileitem.file.read())
+                path = "images/" + email_md5
+                path = os.path.join(os.path.dirname(__file__), "..", path)
+                open(path, "wb").write(fileitem.file.read())
                 return self.redirect("/user")
             else:
                 return self.redirect("/ftypeerror")

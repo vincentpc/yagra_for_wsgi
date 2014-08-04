@@ -28,5 +28,5 @@ CREATE TABLE `yagra`.`session`(
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 添加用户
-GRANT select, update, insert, delete ON yagra.* to `yagra`@`localhost` IDENTIFIED BY 'abcd!1234';
+GRANT select, update, insert, delete ON yagra.* to `yagra`@`localhost` IDENTIFIED BY '123456';
 FLUSH PRIVILEGES;

@@ -15,6 +15,8 @@ import binascii
 import uuid
 
 import webapp.utils as tool
+import webapp.session.Sessoin as Session
+import webapp.session.Store as Store
 import config
 
 
@@ -180,6 +182,24 @@ class BaseHandler(object):
         all_cookies = self.get_cookies()
         for name in all_cookies:
             self.clear_cookie(name)
+
+    @property
+    def session(self):
+        if not hasattr(self, "_session"):
+            table_name = "session"
+            self._session = Session(Store(table_name), self)
+            session_id = self.cookies.get("sid")
+            if session_id:
+                session_id = session_id.value
+                self._session._load(session_id)
+            else:
+                self._session._load()
+        return self._session
+
+    def finalize(self):
+        if hasattr(self, "_session"):
+            self._session._save()
+            self._session.cleanup(86400 * 1)
 
     def gen_headers(self):
         status_expr = httplib.responses[self._status_code]

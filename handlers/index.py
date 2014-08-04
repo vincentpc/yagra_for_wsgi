@@ -9,9 +9,15 @@ class IndexHandler(BaseHandler):
 
     def get(self, error=""):
 
-        email = self.get_secure_cookie("email")
+        #email = self.get_secure_cookie("email")
+
+        sid = self.get_secure_cookie('sid')
+        if sid:
+            email = self.session.get('email')
+        else:
+            email = None
+
         user = dbapi.User()
-        print email
         if email and user.get_user(email) == 0:
             return self.redirect("/user")
         else:

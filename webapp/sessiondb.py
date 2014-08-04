@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import globaldb
+import model.globaldb
 
 
 class SessionDB(object):
 
     def __init__(self):
-        self.db = globaldb.db
+        self.db = model.globaldb.db
         self.table = 'session'
 
     def check_key(self, key):
@@ -16,7 +16,7 @@ class SessionDB(object):
         c.execute(sqlstr, (key,))
         result = c.fetchone()
         c.close()
-        if len(result) is not 0:
+        if result is not None:
             return True
         else:
             return False
@@ -27,10 +27,11 @@ class SessionDB(object):
         c.execute(sqlstr, (key,))
         result = c.fetchone()
         c.close()
-        if len(result) is not 0:
+        print result
+        if result is not None:
             return result
         else:
-            return None
+            return None 
 
     def update_key_time(self, key, time):
         sqlstr = "UPDATE " + self.table + \

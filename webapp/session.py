@@ -7,7 +7,7 @@ import uuid
 import time
 import datetime
 
-import SessionDb.SessionDB
+import webapp.sessiondb as sessiondb
 
 
 class Session(object):
@@ -50,7 +50,7 @@ class Session(object):
                 self.handler.clear_cookie("sid")
 
     def _gen_session_id(self):
-        session_id = "".join(uuid.uuid64().hex for i in xrange(2))
+        session_id = "".join(uuid.uuid4().hex for i in xrange(2))
         return session_id
 
     def cleanup(self, timeup):
@@ -63,7 +63,7 @@ class Session(object):
 class Store(object):
 
     def __init__(self, table_name):
-        self.sessiondb = SessionDb.SessionDB()
+        self.sessiondb = sessiondb.SessionDB()
 
     def encode(self, data):
         pickled = pickle.dumps(data)
@@ -82,8 +82,8 @@ class Store(object):
         if result:
             now = time.strftime("%Y-%m-%d %H-%M-%S")
             self.sessiondb.update_key_time(key, now)
-            
-        return self.decode(result)
+            result = result[0] 
+            return self.decode(result)
 
     def __setitem__(self, key, value):
         data = self.encode(value)
@@ -92,8 +92,11 @@ class Store(object):
         else:
             self.sessiondb.insert_key(key, data)
 
+    def __delitem__(self, key):
+        self.sessiondb.delete_key(key)
+
     def cleanup(self, timeout):
-        timeout = datetime.timedelat(timeout / 24.0 * 60.0 *60.0)
+        timeout = datetime.timedelta(timeout / (24.0 * 60.0 *60.0))
         last = datetime.datetime.now() - timeout
         last = last.strftime("%Y-%m-%d %H-%M-%S") 
         self.sessiondb.delete_key(last)

@@ -15,8 +15,7 @@ import binascii
 import uuid
 
 import webapp.utils as tool
-import webapp.session.Sessoin as Session
-import webapp.session.Store as Store
+import webapp.session as session
 import config
 
 
@@ -187,16 +186,15 @@ class BaseHandler(object):
     def session(self):
         if not hasattr(self, "_session"):
             table_name = "session"
-            self._session = Session(Store(table_name), self)
-            session_id = self.cookies.get("sid")
+            self._session = session.Session(session.Store(table_name), self)
+            session_id = self.get_secure_cookie("sid")
             if session_id:
-                session_id = session_id.value
                 self._session._load(session_id)
             else:
                 self._session._load()
         return self._session
 
-    def finalize(self):
+    def session_finalize(self):
         if hasattr(self, "_session"):
             self._session._save()
             self._session.cleanup(86400 * 1)
@@ -243,6 +241,8 @@ class BaseHandler(object):
         resp_body = text
         resp_header = self.gen_headers()
         resp = HttpResponse(resp_status, resp_header, resp_body)
+        #save session here
+        self.session_finalize()
         return resp
 
     def wrap_html(self, path, params=None):

@@ -18,7 +18,12 @@ class UploadHandler(BaseHandler):
             return self.redirect("ftypeerror")
 
     def check(self):
-        email = self.get_secure_cookie("email")
+        #email = self.get_secure_cookie("email")
+        sid = self.get_secure_cookie('sid')
+        if not sid:
+            return False
+        email = self.session.get('email')
+        
         user = dbapi.User()
         if email and user.get_user(email) == 0:
             profile = user.get_user_all(email)

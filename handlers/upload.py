@@ -15,7 +15,8 @@ class UploadHandler(BaseHandler):
 
     def check_xsrf(self):
         if self.check_xsrf_cookie() == False:
-            return self.redirect("ftypeerror")
+            return False
+        return True
 
     def check(self):
         #email = self.get_secure_cookie("email")
@@ -43,7 +44,8 @@ class UploadHandler(BaseHandler):
         return size
 
     def post(self):
-        self.check_xsrf() 
+        if self.check_xsrf() == False:
+            return self.redirect("ftypeerror")
         if self.check() == False:
             return self.redirect("/")
         fileitem = self.request.files["filename"]

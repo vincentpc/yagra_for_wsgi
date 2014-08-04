@@ -11,8 +11,8 @@ class RegisterHandler(BaseHandler):
 
     def check_xsrf(self):
         if self.check_xsrf_cookie() == False:
-            error = "xsrf invalid"
-            self.get(error)
+            return False
+        return True
 
     def get(self, error=""):
         xsrf_token = self.xsrf_from_html()
@@ -21,7 +21,9 @@ class RegisterHandler(BaseHandler):
         return self.write(body)
 
     def post(self):
-        self.check_xsrf()
+        if self.check_xsrf() == False:
+            error = "xsrf invalid"
+            return self.get(error)
         email = self.get_arg('email')
         email = email.strip()
         password = self.get_arg('password')

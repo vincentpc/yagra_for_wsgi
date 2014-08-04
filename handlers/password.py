@@ -10,7 +10,8 @@ class PasswordHandler(BaseHandler):
     def check_xsrf(self):
         if self.check_xsrf_cookie() == False:
             self.clear_cookies()
-            return self.redirect("/")
+            return False
+        return True
 
     def check(self):
         #email = self.get_secure_cookie("email")
@@ -40,10 +41,12 @@ class PasswordHandler(BaseHandler):
         return self.write(body)
 
     def post(self):
+        if self.check_xsrf() == False:
+            return self.redirect("/")
         #self.check()
         if self.check() == False:
             return self.redirect("/")
-        self.check_xsrf()
+        #self.check_xsrf()
 
         oldpassword = self.get_arg('oldpassword')
         password = self.get_arg('password')

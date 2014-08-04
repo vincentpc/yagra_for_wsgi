@@ -22,7 +22,6 @@ class HttpRequest(object):
 
     def __init__(self, environ, wsgiinput, meth, uri,
                  query_str, host, headers, cookies=""):
-        print uri
         self.meth = meth
         self.uri = uri
         self.cookies_str = cookies

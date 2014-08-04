@@ -15,3 +15,6 @@ db = MySQLdb.connect(host=config.DB_HOST,
                      db=config.DB_NAME,
                      charset="utf8"
                      )
+
+#autocommit default is off in MySQLdb,set to on
+db.autocommit(True) 

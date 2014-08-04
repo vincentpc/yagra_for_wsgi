@@ -18,13 +18,14 @@ class UserHandler(BaseHandler):
             if profile:
                 self.time = profile[4].date()
                 self.email = email
+                return True
         else:
             self.clear_cookies()
-            return self.redirect("/")
+            return False 
 
     def get(self):
-        self.check()
-
+        if self.check() == False:
+            return self.redirect("/")
         m = hashlib.md5()
         m.update(self.email)
         email_md5 = m.hexdigest()

@@ -35,7 +35,6 @@ class RegisterHandler(BaseHandler):
                 result = user.insert_user(email, password)
                 if result != -1:
                     self.set_secure_cookie('email', str(email))
-                    print "hello set cookie"
                     return self.redirect("/user")
                 else:
                     error = "insert falure, try again later"

@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import sys
-sys.path.append('/home/vagrant/mini')
-
 from webapp.web import Application
 from handlers.index import IndexHandler
 from handlers.register import RegisterHandler

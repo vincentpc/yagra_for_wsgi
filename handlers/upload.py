@@ -43,8 +43,9 @@ class UploadHandler(BaseHandler):
         return size
 
     def post(self):
-        self.check_xsrf()
-        self.check()
+        self.check_xsrf() 
+        if self.check() == False:
+            return self.redirect("/")
         fileitem = self.request.files["filename"]
         if fileitem.filename:
             #fn = os.path.basename(fileitem.filename)

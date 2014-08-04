@@ -25,9 +25,10 @@ class PasswordHandler(BaseHandler):
             if profile:
                 self.time = profile[4]
                 self.email = email
+                return True
         else:
             self.clear_cookies()
-            return self.redirect("/")
+            return False
 
     def get(self, error=""):
         self.check()
@@ -39,7 +40,9 @@ class PasswordHandler(BaseHandler):
         return self.write(body)
 
     def post(self):
-        self.check()
+        #self.check()
+        if self.check() == False:
+            return self.redirect("/")
         self.check_xsrf()
 
         oldpassword = self.get_arg('oldpassword')

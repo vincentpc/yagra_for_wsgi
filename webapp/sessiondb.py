@@ -27,7 +27,6 @@ class SessionDB(object):
         c.execute(sqlstr, (key,))
         result = c.fetchone()
         c.close()
-        print result
         if result is not None:
             return result
         else:

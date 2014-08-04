@@ -31,9 +31,10 @@ class UploadHandler(BaseHandler):
                 self.id = profile[0]
                 self.time = profile[4]
                 self.email = email
+                return True
         else:
             self.clear_cookies()
-            return self.redirect("/")
+            return False
 
     def get_filesize(self, file):
         file.seek(0, 2)

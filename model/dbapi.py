@@ -40,7 +40,6 @@ class User(object):
                                time.strftime('%Y-%m-%d %H:%M:%S')))
             self.db.commit()
             lastinsertid = c.lastrowid
-            print "inser user ", sqlstr
             return lastinsertid
         except:
             self.db.rollback()
@@ -51,7 +50,6 @@ class User(object):
         c = self.db.cursor()
         c.execute(sqlstr, (name,))
         result = c.fetchall()
-        print "database user result ", result
         if len(result) is not 0:
             return 0
         else:
@@ -62,7 +60,6 @@ class User(object):
         c = self.db.cursor()
         c.execute(sqlstr, (name,))
         result = c.fetchall()
-        print "database result ", result
         if len(result) is not 0:
             return result[0]
         else:

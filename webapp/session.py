@@ -17,6 +17,48 @@ class Session(object):
         self.store = store
         self.handler = handler
 
+    def __contains__(self, key):
+        return key in self._data
+
+    def __getitem__(self, key):
+        return self._data[key]
+
+    def __setitem__(self, key, value):
+        self._data[key] = value
+
+    def __delitem__(self, key):
+        del self._data[key]
+
+    def get(self, key, default = None):
+        return self._data.get(key, default)
+
+    def _load(self, id = None):
+        self.session_id = id
+        self.is_new = False
+        if not self.session_id:
+            self.is_new = True
+            self.session_id = self._gen_session_id()
+        self._data = self.store[self.session_id] or dict()
+
+    def _save(self):
+        if not hasattr(self, "_killed"):
+            self.store[self.session_id] = self._data
+            if self.is_new:
+                self.handler.set_cookie("sid", self.session_id)
+        else:
+            if not self.is_new:
+                self.handler.clear_cookie("sid")
+
+    def _gen_session_id(self):
+        session_id = "".join(uuid.uuid64().hex for i in xrange(2))
+        return session_id
+
+    def cleanup(self, timeup):
+        self.store.cleanup(timeup)
+
+    def kill(self):
+        del self.store[self.session_id]
+        self._killed = True
 
 class Store(object):
 

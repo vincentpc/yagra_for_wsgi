@@ -2,6 +2,7 @@
 CREATE DATABASE IF NOT EXISTS `yagra`;
 
 DROP TABLE IF EXISTS `yagra`.`yagra_user`;
+DROP TABLE IF EXISTS `yagra`.`session`;
 
 
 -- 用户表
@@ -18,7 +19,13 @@ CREATE TABLE `yagra`.`yagra_user` (
   KEY `user_email_key` (`user_email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+-- session TABLE
+CREATE TABLE `yagra`.`session`(
+    `session_id` char(64) NOT NULL,
+    `atime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `data` text,
+    PRIMARY KEY (`session_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 添加用户
 GRANT select, update, insert, delete ON yagra.* to `yagra`@`localhost` IDENTIFIED BY 'abcd!1234';

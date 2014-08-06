@@ -23,5 +23,5 @@ class IndexHandler(BaseHandler):
         else:
             self.clear_cookies()
             param = {"error_info": error, "xsrf_token": self.xsrf_from_html()}
-            body = self.wrap_html('templates/index.html', param)
+            body = self.wrap_html('index.html', param)
             return self.write(body)

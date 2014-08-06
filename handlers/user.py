@@ -42,5 +42,5 @@ class UserHandler(BaseHandler):
                 """<img src="static/default.jpg" height="400"  class="rounded" alt="Upload Image Below">"""
         xsrf_token = self.xsrf_from_html()
         params = {'name': self.email, 'time': self.time, 'image': imagetag, 'xsrf_token': xsrf_token}
-        body = self.wrap_html('templates/user.html', params)
+        body = self.wrap_html('user.html', params)
         return self.write(body)

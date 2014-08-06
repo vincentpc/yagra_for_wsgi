@@ -7,5 +7,5 @@ from webapp.web import BaseHandler
 class FiletypeErrorHandler(BaseHandler):
 
     def get(self):
-        body = self.wrap_html('templates/ftypeerror.html')
+        body = self.wrap_html('ftypeerror.html')
         return self.write(body)

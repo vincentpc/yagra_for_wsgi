@@ -13,6 +13,7 @@ import email.utils
 import urlparse
 import binascii
 import uuid
+from jinja2 import Environment, FileSystemLoader
 
 import webapp.utils as tool
 import webapp.session as session
@@ -65,16 +66,20 @@ class HttpResponse(object):
 
 class TemplateWrapper(object):
 
-    def __init__(self):
-        pass
+    @staticmethod
+    def jinja2():
+        basepath = os.path.join(os.path.dirname(__file__), '..', 'templates')
+        env = Environment(
+            loader=FileSystemLoader(basepath))
+        print basepath
+        return env
 
     @staticmethod
-    def wrap_html(path, params):
-        path = os.path.join(os.path.dirname(__file__), "..", path)
-        body = open(path, 'r').read()
-        if params:
-            body = body % params
-        return body
+    def wrap_html(path, params={}):
+        env = TemplateWrapper.jinja2()
+        template = env.get_template(path)
+        resp_body = template.render(params)
+        return resp_body.encode('utf-8')
 
 
 class BaseHandler(object):
@@ -241,11 +246,11 @@ class BaseHandler(object):
         resp_body = text
         resp_header = self.gen_headers()
         resp = HttpResponse(resp_status, resp_header, resp_body)
-        #save session here
+        # save session here
         self.session_finalize()
         return resp
 
-    def wrap_html(self, path, params=None):
+    def wrap_html(self, path, params={}):
         return TemplateWrapper.wrap_html(path, params)
 
 

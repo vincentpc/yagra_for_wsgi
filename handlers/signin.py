@@ -34,6 +34,6 @@ class SigninHandler(BaseHandler):
             error = "Password Invalid"
         xsrf_token = self.xsrf_from_html()
         param = {"error_info": error, "xsrf_token": xsrf_token}
-        body = self.wrap_html('templates/index.html', param)
+        body = self.wrap_html('index.html', param)
         return self.write(body)
         # self.redirect("/")

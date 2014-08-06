@@ -46,17 +46,17 @@
 
       <!-- Main component for a primary marketing message or call to action -->
       <div class="page-header">
-          <h1>Welcome %(name)s</h1>
+          <h1>Welcome {{name}}</h1>
 
-        <p>Account: %(name)s</p>
-        <p>Register Time: %(time)s</p>
+          <p>Account: {{name}}</p>
+          <p>Register Time: {{time}}</p>
       <form class="form-signin" role="form" action="/pwdchange" method="GET">
         <button class="btn btn-primary" type="submit">Change Password</button>
     </form>
      </div>
      <div class ="page-header">
          <h3> Your Avatar: </h3>
-          %(image)s
+         {{image}}
       </div>
       <div class="page-header">
           <h3>Upload New Avatar: </h3>
@@ -64,7 +64,7 @@
         <form role="form" enctype="multipart/form-data" action="/upload" method="POST">
             <div class="form-group">
                 <input type="file" name="filename">
-                %(xsrf_token)s
+                {{xsrf_token}}
         </div>
         <button type="submit" class="btn btn-lg btn-primary">Submit</button>
         <h5 class="form-signin-heading">Only JPEG/PNG/GIF(less than 5MB) Supported</h5>

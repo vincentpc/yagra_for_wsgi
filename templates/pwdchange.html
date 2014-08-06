@@ -31,7 +31,7 @@
       <form class="form-signin" role="form" action="/pwdchange" method="POST">
           <h2 class="form-signin-heading">Password Change</h2>
           <p class="lead">
-        Account: %(name)s
+          Account: {{name}}
           </p>
         Enter your OLD password:
         <input type="password" name="oldpassword" class="form-control" placeholder="Password" required autofocus>
@@ -39,11 +39,11 @@
         <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
         Enter your NEW password again:
         <input type="password" name="password2" class="form-control" placeholder="Password" required>
-        %(xsrf_token)s
+        {{xsrf_token}}
         New Password Strength:
         <label id ="result"> </label>
         <h4 class="form-signin-heading" style="color:red">
-            %(error_info)s
+            {{error_info}}
         </h4>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Confirm</button>
     </form>
